@@ -300,24 +300,24 @@ const handleLikeConfirm = async () => {
     <!-- 커스텀 모달 컴포넌트 연결 -->
     <ConfirmationModal
         :show="isPostDeleteModalOpen"
-        :title="'루틴 삭제 확인'"
-        :message="'정말로 이 루틴을 삭제하시겠습니까? 삭제된 루틴은 복구할 수 없습니다.'"
+        title="루틴 삭제 확인"
+        message="정말로 이 루틴을 삭제하시겠습니까? 삭제된 루틴은 복구할 수 없습니다."
         :is-loading="boardStore.isLoading"
         :error="postDeleteError"
         @update:show="isPostDeleteModalOpen = $event"
-        :confirmButtonText="'삭제하기'"
+        confirmButtonText="삭제하기"
         @confirm="confirmDeletePost"
     />
 
     <!-- 2. ⭐️ 댓글 삭제 커스텀 모달 컴포넌트 ⭐️ -->
     <ConfirmationModal
         :show="isCommentDeleteModalOpen"
-        :title="'응원/질문 삭제 확인'"
-        :message="'정말로 이 응원/질문을 삭제하시겠습니까? 삭제된 응원/질문은 복구할 수 없습니다.'"
+        title="응원/질문 삭제 확인"
+        message="정말로 이 응원/질문을 삭제하시겠습니까? 삭제된 응원/질문은 복구할 수 없습니다."
         :is-loading="commentStore.isLoading"
         :error="commentDeleteError"
         @update:show="isCommentDeleteModalOpen = $event"
-        :confirmButtonText="'삭제하기'"
+        confirmButtonText="삭제하기"
         @confirm="confirmDeleteComment"
     />
 
