@@ -28,6 +28,7 @@ const isCommentDeleteModalOpen = ref(false);
 const commentToDeleteId = ref(null); // 삭제할 댓글 ID 저장
 const commentDeleteError = ref(''); // 댓글 삭제 에러 메시지
 
+
 // 1. 좋아요 모달 상태
 const showLikeModal = ref(false);
 // 2. 좋아요 모달 처리 중 로딩 상태 (모달의 isLoading props에 전달)
@@ -39,6 +40,10 @@ const likeError = ref('');
 const isToastVisible = ref(false);
 const toastMessage = ref('');
 const toastType = ref('success');
+
+
+const deleteCommentMessage = "정말로 이 응원/질문을 삭제하시겠습니까?\n삭제된 응원/질문은 복구할 수 없습니다.";
+
 
 // 컴포넌트 마운트 시 상세 정보 로드
 onMounted(async () => { // onMounted 훅을 async로 선언합니다.
@@ -129,7 +134,7 @@ const confirmDeletePost = async () => {
 
     // 2. ⭐️ [핵심] 토스트 메시지 상태를 Pinia Store에 저장하고 이동합니다. ⭐️
     // BoardList.vue에서 이 상태를 확인하고 토스트를 띄웁니다.
-    boardStore.setTransientToast('게시글이 성공적으로 삭제되었습니다.', 'success');
+    boardStore.setTransientToast('루틴이 성공적으로 삭제되었습니다.', 'success');
 
     // 3. 목록으로 이동
     router.push({name: 'BoardList'});
@@ -138,10 +143,10 @@ const confirmDeletePost = async () => {
 
   } catch (error) {
     // 3. 삭제 실패: 에러 메시지를 모달에 표시
-    const errorMessage = error.response?.data?.message || "게시글 삭제에 실패했습니다. 권한을 확인해 주세요.";
+    const errorMessage = error.response?.data?.message || "루틴 삭제에 실패했습니다. 권한을 확인해 주세요.";
     postDeleteError.value = errorMessage;
 
-    console.error("삭제 실패:", error);
+    console.error("게시글 삭제 실패:", error);
   }
 };
 
@@ -163,11 +168,11 @@ const confirmDeleteComment = async () => {
     isCommentDeleteModalOpen.value = false;
     commentToDeleteId.value = null;
 
-    showToast('댓글이 성공적으로 삭제되었습니다.', 'success');
+    showToast('응원/질문이 성공적으로 삭제되었습니다.', 'success');
 
   } catch (error) {
     // 삭제 실패 시 모달에 에러 표시
-    const errorMessage = commentStore.error || "댓글 삭제에 실패했습니다. 권한을 확인해 주세요.";
+    const errorMessage = commentStore.error || "응원/질문 삭제에 실패했습니다. 권한을 확인해 주세요.";
     commentDeleteError.value = errorMessage;
     console.error("댓글 삭제 실패:", error);
   }
@@ -213,12 +218,12 @@ const handleLikeConfirm = async () => {
     <div class="container mx-auto p-4 md:p-10 max-w-4xl">
       <div v-if="boardStore.isLoading" class="text-center py-20">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-        <p class="mt-4 text-lg text-gray-600">게시글을 불러오는 중...</p>
+        <p class="mt-4 text-lg text-gray-600">루틴을 불러오는 중...</p>
       </div>
 
       <!-- 게시글을 찾을 수 없는 경우를 postNotFound로 처리 -->
       <div v-else-if="postNotFound" class="text-center py-20 bg-white rounded-xl shadow-lg">
-        <p class="text-2xl text-red-500 font-bold">게시글을 찾을 수 없거나 삭제되었습니다.</p>
+        <p class="text-2xl text-red-500 font-bold">루틴을 찾을 수 없거나 삭제되었습니다.</p>
         <button
             @click="router.push({ name: 'BoardList' })"
             class="mt-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200 shadow"
@@ -273,22 +278,22 @@ const handleLikeConfirm = async () => {
           <div v-if="isAuthor" class="space-x-2">
             <button
                 @click="handleEditPost"
-                class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow"
+                class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow"
             >
-              수정
+              수정하기
             </button>
             <button
                 @click="handleDeletePost"
                 class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow"
             >
-              삭제
+              삭제하기
             </button>
           </div>
         </footer>
       </div>
 
       <!-- ⭐️ 2. 댓글 섹션 통합 (CommentList 컴포넌트 추가) ⭐️ -->
-      <div class="mt-10">
+      <div class="mt-15">
         <CommentList
             :post-id="postId"
             @open-delete-modal="handleOpenCommentDeleteModal"
@@ -300,22 +305,24 @@ const handleLikeConfirm = async () => {
     <!-- 커스텀 모달 컴포넌트 연결 -->
     <ConfirmationModal
         :show="isPostDeleteModalOpen"
-        :title="'게시글 삭제 확인'"
-        :message="'정말로 이 게시글을 삭제하시겠습니까? 삭제된 게시글은 복구할 수 없습니다.'"
+        title="루틴 삭제 확인"
+        message="정말로 이 루틴을 삭제하시겠습니까? 삭제된 루틴은 복구할 수 없습니다."
         :is-loading="boardStore.isLoading"
         :error="postDeleteError"
         @update:show="isPostDeleteModalOpen = $event"
+        confirmButtonText="삭제하기"
         @confirm="confirmDeletePost"
     />
 
     <!-- 2. ⭐️ 댓글 삭제 커스텀 모달 컴포넌트 ⭐️ -->
     <ConfirmationModal
         :show="isCommentDeleteModalOpen"
-        :title="'댓글 삭제 확인'"
-        :message="'정말로 이 댓글을 삭제하시겠습니까? 삭제된 댓글은 복구할 수 없습니다.'"
+        title="응원/질문 삭제 확인"
+        :message="deleteCommentMessage"
         :is-loading="commentStore.isLoading"
         :error="commentDeleteError"
         @update:show="isCommentDeleteModalOpen = $event"
+        confirmButtonText="삭제하기"
         @confirm="confirmDeleteComment"
     />
 
@@ -332,7 +339,7 @@ const handleLikeConfirm = async () => {
       @update:show="showLikeModal = $event"
       @confirm="handleLikeConfirm"
 
-      title="경고: 로그인 필요"
+      title="로그인 필요"
       message="좋아요를 누르려면 로그인이 필요합니다."
       :is-loading="isProcessing"
       :error="likeError"
