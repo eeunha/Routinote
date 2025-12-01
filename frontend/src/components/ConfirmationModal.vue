@@ -24,11 +24,11 @@ const props = defineProps({
   },
   confirmButtonText: {
     type: String,
-    default: '확인',
+    default: '확인하기',
   },
   cancelButtonText: {
     type: String,
-    default: '취소',
+    default: '취소하기',
   },
   confirmButtonClass: {
     type: String,
@@ -89,7 +89,7 @@ onUnmounted(() => {
       <h2 class="text-xl font-bold mb-4 text-gray-900">{{ title }}</h2>
 
       <!-- 메시지 -->
-      <p class="mb-6 text-gray-700 break-words">{{ message }}</p>
+      <p class="mb-6 text-gray-700 whitespace-pre-wrap break-normal">{{ message }}</p>
 
       <!-- 에러 메시지 -->
       <p v-if="error" class="text-red-500 text-sm mb-4 font-medium bg-red-50 p-2 rounded border border-red-200">
@@ -97,7 +97,7 @@ onUnmounted(() => {
       </p>
 
       <!-- 액션 버튼 -->
-      <div class="flex justify-center space-x-4">
+      <div class="flex justify-end space-x-4">
         <!-- 취소 버튼 -->
         <button
             v-if="cancelButtonText && cancelButtonText.trim() !== ''" @click="close"

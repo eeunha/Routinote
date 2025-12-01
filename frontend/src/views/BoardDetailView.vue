@@ -28,6 +28,7 @@ const isCommentDeleteModalOpen = ref(false);
 const commentToDeleteId = ref(null); // 삭제할 댓글 ID 저장
 const commentDeleteError = ref(''); // 댓글 삭제 에러 메시지
 
+
 // 1. 좋아요 모달 상태
 const showLikeModal = ref(false);
 // 2. 좋아요 모달 처리 중 로딩 상태 (모달의 isLoading props에 전달)
@@ -39,6 +40,10 @@ const likeError = ref('');
 const isToastVisible = ref(false);
 const toastMessage = ref('');
 const toastType = ref('success');
+
+
+const deleteCommentMessage = "정말로 이 응원/질문을 삭제하시겠습니까?\n삭제된 응원/질문은 복구할 수 없습니다.";
+
 
 // 컴포넌트 마운트 시 상세 정보 로드
 onMounted(async () => { // onMounted 훅을 async로 선언합니다.
@@ -313,7 +318,7 @@ const handleLikeConfirm = async () => {
     <ConfirmationModal
         :show="isCommentDeleteModalOpen"
         title="응원/질문 삭제 확인"
-        message="정말로 이 응원/질문을 삭제하시겠습니까? 삭제된 응원/질문은 복구할 수 없습니다."
+        :message="deleteCommentMessage"
         :is-loading="commentStore.isLoading"
         :error="commentDeleteError"
         @update:show="isCommentDeleteModalOpen = $event"
